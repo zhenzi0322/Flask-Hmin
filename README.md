@@ -18,7 +18,7 @@ poetry add Flask-Hmin
 
 您也可以下载存储库并手动安装它，执行以下操作：
 ```shell
-git clone git@github.com:zhenzi0322/Flask-Hmin.git
+git clone https://github.com/zhenzi0322/Flask-Hmin.git
 cd Flask-Hmin
 python setup.py install
 ```
