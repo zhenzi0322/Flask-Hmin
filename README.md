@@ -69,3 +69,30 @@ def test():
 if __name__ == '__main__':
     app.run()
 ```
+
+### 把模板HTML内容加载到Redis中
+```python
+from flask import Flask, render_template
+from flask_hmin import HMin
+
+app = Flask(__name__)
+app.config["HMIN_COMPRESS_HTML"] = True
+app.config['HTML_LOAD_REDIS'] = True
+
+hmin = HMin(app=app, redis_config={'host': "localhost", "port": 6379, "db": 0, "password": ''})
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+if __name__ == '__main__':
+    app.run()
+```
+默认过期时间是一天。86400秒。
+
+如果需要自定义`Redis`过期时间，如下：
+```python
+app.config['EXPIRIES_TIME'] = 300
+```
+上面是配置300秒过期。

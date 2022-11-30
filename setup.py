@@ -7,7 +7,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setup(
     name='Flask-Hmin',
-    version='1.0.0',
+    version='1.0.1',
     url='https://github.com/zhenzi0322/Flask-Hmin',
     license='BSD-3-Clause',
     author='Long',
