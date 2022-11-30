@@ -24,6 +24,26 @@ python setup.py install
 ```
 
 ## 使用方法
+
+### 所有模板视图html都压缩
+```python
+from flask import Flask, render_template
+from flask_hmin import HMin
+
+app = Flask(__name__)
+app.config["HMIN_COMPRESS_HTML"] = True
+
+HMin(app=app)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+if __name__ == '__main__':
+    app.run()
+```
+
+### 指定某个模板视图不压缩
 ```python
 from flask import Flask, render_template
 from flask_hmin import HMin
@@ -35,8 +55,14 @@ hmin = HMin(app=app)
 
 
 @app.route("/")
-@hmin.compress
+@hmin.not_compress
 def home():
+    # 该视图模板不压缩
+    return render_template("index.html")
+
+
+@app.route("/test")
+def test():
     return render_template("index.html")
 
 

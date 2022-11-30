@@ -8,8 +8,13 @@ hmin = HMin(app=app)
 
 
 @app.route("/")
-@hmin.compress
+@hmin.not_compress
 def home():
+    return render_template("index.html")
+
+
+@app.route("/test")
+def test():
     return render_template("index.html")
 
 
