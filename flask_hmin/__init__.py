@@ -8,23 +8,31 @@ from flask_hmin.tool import str_to_md5
 class HMin(object):
     def __init__(self, app=None, redis_config=None):
         self.app = app
-        self.redis_tool = RedisTool(
-            host=redis_config.get('host') or 'localhost',
-            port=redis_config.get('port') or 6379,
-            db=redis_config.get('db') or 0,
-            password=redis_config.get('password') or ''
-        )
+        if redis_config:
+            self.redis_tool = RedisTool(
+                host=redis_config.get('host') or 'localhost',
+                port=redis_config.get('port') or 6379,
+                db=redis_config.get('db') or 0,
+                password=redis_config.get('password') or ''
+            )
         if app is not None:
-            self.init_app(app)
+            self.init_app(app, redis_config=redis_config)
         self._compress_routes = set()
 
-    def init_app(self, app):
+    def init_app(self, app, redis_config=None):
         app.config.setdefault('HMIN_COMPRESS_HTML', False)
         app.config.setdefault('HTML_LOAD_REDIS', False)
         app.config.setdefault("EXPIRIES_TIME", 86400)
         if app.config['HMIN_COMPRESS_HTML']:
             app.after_request(self.set_response)
         self.app = app
+        if redis_config:
+            self.redis_tool = RedisTool(
+                host=redis_config.get('host') or 'localhost',
+                port=redis_config.get('port') or 6379,
+                db=redis_config.get('db') or 0,
+                password=redis_config.get('password') or ''
+            )
 
     def set_response(self, response):
         if response.content_type == u'text/html; charset=utf-8':
