@@ -7,14 +7,10 @@ from flask_hmin.tool import str_to_md5
 
 class HMin(object):
     def __init__(self, app=None, redis_config=None):
+        self.redis_tool = None
         self.app = app
         if redis_config:
-            self.redis_tool = RedisTool(
-                host=redis_config.get('host') or 'localhost',
-                port=redis_config.get('port') or 6379,
-                db=redis_config.get('db') or 0,
-                password=redis_config.get('password') or ''
-            )
+            self.set_redis(redis_config=redis_config)
         if app is not None:
             self.init_app(app, redis_config=redis_config)
         self._compress_routes = set()
@@ -27,12 +23,15 @@ class HMin(object):
             app.after_request(self.set_response)
         self.app = app
         if redis_config:
-            self.redis_tool = RedisTool(
-                host=redis_config.get('host') or 'localhost',
-                port=redis_config.get('port') or 6379,
-                db=redis_config.get('db') or 0,
-                password=redis_config.get('password') or ''
-            )
+            self.set_redis(redis_config=redis_config)
+
+    def set_redis(self, redis_config):
+        self.redis_tool = RedisTool(
+            host=redis_config.get('host') or 'localhost',
+            port=redis_config.get('port') or 6379,
+            db=redis_config.get('db') or 0,
+            password=redis_config.get('password') or ''
+        )
 
     def set_response(self, response):
         if response.content_type == u'text/html; charset=utf-8':
